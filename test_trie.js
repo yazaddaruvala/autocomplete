@@ -8,7 +8,7 @@ var isEmpty = function(ob) {
 var root = new Trie();
 // Test Create
 console.log("Create:", '\t\t\t\t', typeof(root) !== 'undefined' && root.name === '' && root.isWord === false && isEmpty(root.children));
-if (!(typeof(root) !== 'undefined' && root.name === '' && root.isWord === false && isEmpty(root.children))) process.exit();
+if (!(typeof(root) !== 'undefined' && root.name === '' && root.isWord === false && isEmpty(root.children))) process.exit(-1);
 
 // Test Add Word
 root.set('and')
@@ -20,7 +20,7 @@ var test_an = typeof(test) !== 'undefined' && test.name === 'n' && test.isWord =
 test = test.children['d'];
 var test_and = typeof(test) !== 'undefined' && test.name === 'd' && test.isWord === true && isEmpty(test.children);
 console.log("Set:", '\t\t\t\t\t', test_root && test_a && test_an && test_and);
-if (!(test_root && test_a && test_an && test_and)) process.exit();
+if (!(test_root && test_a && test_an && test_and)) process.exit(-1);
 
 // Test Add Word for a second word
 root.set('an')
@@ -32,7 +32,7 @@ test_an = typeof(test) !== 'undefined' && test.name === 'n' && test.isWord === t
 test = test.children['d'];
 test_and = typeof(test) !== 'undefined' && test.name === 'd' && test.isWord === true && isEmpty(test.children);
 console.log("Set (second word):", '\t\t\t', test_root && test_a && test_an && test_and);
-if (!(test_root && test_a && test_an && test_and)) process.exit();
+if (!(test_root && test_a && test_an && test_and)) process.exit(-1);
 
 // Test Remove Word
 root.del('and');
@@ -44,7 +44,7 @@ test_an   = typeof(test) !== 'undefined' && test.name === 'n' && test.isWord ===
 test = test.children['d'];
 test_and  = typeof(test) === 'undefined';
 console.log("Del:", '\t\t\t\t\t', test_root && test_a && test_an && test_and);
-if (!(test_root && test_a && test_an && test_and)) process.exit();
+if (!(test_root && test_a && test_an && test_and)) process.exit(-1);
 
 root.set('Hello');
 var non_existing_short = root.exists('Hell') === false;
@@ -53,5 +53,12 @@ var existing = root.exists('Hello')  ===  true;
 console.log("Exists (non-existing word short):", '\t', non_existing_short);
 console.log("Exists (non-existing word long):", '\t', non_existing_long);
 console.log("Exists (existing word):", '\t\t', existing);
-if (!(non_existing_short && non_existing_long && existing)) process.exit();
+if (!(non_existing_short && non_existing_long && existing)) process.exit(-1);
+
+var words = ['a', 'b', 'and', 'an', 'as', 'ant', 'andy', 'art'];
+root.sets(words);
+var match = root.match('a').join('') == [ 'a', 'an', 'and', 'andy', 'ant', 'as', 'art' ].join('');
+console.log("Match:", '\t\t\t\t\t', match);
+if (!(match)) process.exit(-1);
+
 
