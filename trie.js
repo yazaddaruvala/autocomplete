@@ -1,7 +1,7 @@
-var Trie = function(name, isWord) {
+var Trie = function(name) {
   this.name = name || '';
   this.isWord = false;
-	this.children = [];
+	this.children = {};
 };
 
 var isEmpty = function(ob) {
