@@ -1,64 +1,40 @@
 var Trie = require('./trie').Trie;
+var assert = require('assert');
 
-var isEmpty = function(ob) {
-  for(var i in ob){ return false; }
-  return true;
-}
-
-var root = new Trie();
 // Test Create
-console.log("Create:", '\t\t\t\t', typeof(root) !== 'undefined' && root.name === '' && root.isWord === false && isEmpty(root.children));
-if (!(typeof(root) !== 'undefined' && root.name === '' && root.isWord === false && isEmpty(root.children))) process.exit(-1);
+var root = new Trie();
+var expected = {
+  root: { name: '' , isWord: false, children: {} },
+  a   : { name: 'a', isWord: false, children: {} },
+  an  : { name: 'n', isWord: false, children: {} },
+  and : { name: 'd', isWord: false, children: {} }
+}; 
+assert.deepEqual( root, expected.root, "Failed root was not correctly initialized." );
 
 // Test Add Word
-root.set('and')
-var test_root = typeof(root) !== 'undefined' && root.name === '' && root.isWord === false && !isEmpty(root.children);
-var test = root.children['a'];
-var test_a = typeof(test) !== 'undefined' && test.name === 'a' && test.isWord === false && !isEmpty(test.children);
-test = test.children['n'];
-var test_an = typeof(test) !== 'undefined' && test.name === 'n' && test.isWord === false && !isEmpty(test.children);
-test = test.children['d'];
-var test_and = typeof(test) !== 'undefined' && test.name === 'd' && test.isWord === true && isEmpty(test.children);
-console.log("Set:", '\t\t\t\t\t', test_root && test_a && test_an && test_and);
-if (!(test_root && test_a && test_an && test_and)) process.exit(-1);
+root.set('and');
+expected.root.children['a'] = expected.a;
+expected.a.children['n']    = expected.an;
+expected.an.children['d']   = expected.and;
+expected.and.isWord = true;
+assert.deepEqual(root, expected.root, "Failed root was not correctly modified by set('and').");
 
-// Test Add Word for a second word
+// Test Add Word, for a second word
 root.set('an')
-test_root = typeof(root) !== 'undefined' && root.name === '' && root.isWord === false && !isEmpty(root.children);
-test = root.children['a'];
-test_a = typeof(test) !== 'undefined' && test.name === 'a' && test.isWord === false && !isEmpty(test.children);
-test = test.children['n'];
-test_an = typeof(test) !== 'undefined' && test.name === 'n' && test.isWord === true && !isEmpty(test.children);
-test = test.children['d'];
-test_and = typeof(test) !== 'undefined' && test.name === 'd' && test.isWord === true && isEmpty(test.children);
-console.log("Set (second word):", '\t\t\t', test_root && test_a && test_an && test_and);
-if (!(test_root && test_a && test_an && test_and)) process.exit(-1);
+expected.an.isWord = true;
+assert.deepEqual(root, expected.root, "Failed root was not correctly modified by set('an').");
 
 // Test Remove Word
 root.del('and');
-test_root = typeof(root) !== 'undefined' && root.name === ''  && root.isWord === false && !isEmpty(root.children);
-test = root.children['a'];
-test_a    = typeof(test) !== 'undefined' && test.name === 'a' && test.isWord === false && !isEmpty(test.children);
-test = test.children['n'];
-test_an   = typeof(test) !== 'undefined' && test.name === 'n' && test.isWord === true  &&  isEmpty(test.children);
-test = test.children['d'];
-test_and  = typeof(test) === 'undefined';
-console.log("Del:", '\t\t\t\t\t', test_root && test_a && test_an && test_and);
-if (!(test_root && test_a && test_an && test_and)) process.exit(-1);
+delete expected.and;
+delete expected.an.children['d'];
+assert.deepEqual(root, expected.root, "Failed root was not correctly modified by del('and').");
 
 root.set('Hello');
-var non_existing_short = root.exists('Hell') === false;
-var non_existing_long = root.exists('Helloo') === false;
-var existing = root.exists('Hello')  ===  true;
-console.log("Exists (non-existing word short):", '\t', non_existing_short);
-console.log("Exists (non-existing word long):", '\t', non_existing_long);
-console.log("Exists (existing word):", '\t\t', existing);
-if (!(non_existing_short && non_existing_long && existing)) process.exit(-1);
+assert.strictEqual(false, root.exists('Hell'), "Non existing short word 'exists'" );
+assert.strictEqual(false, root.exists('Helloo'), "Non existing long word 'exists'" );
+assert.strictEqual(true, root.exists('Hello'), "Existing short word doesn't 'exists'" );
 
-var words = ['a', 'b', 'and', 'an', 'as', 'ant', 'andy', 'art'];
+var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
 root.sets(words);
-var match = root.match('a').join('') == [ 'a', 'an', 'and', 'andy', 'ant', 'as', 'art' ].join('');
-console.log("Match:", '\t\t\t\t\t', match);
-if (!(match)) process.exit(-1);
-
-
+assert.deepEqual( root.match('a'), words.slice(1));
