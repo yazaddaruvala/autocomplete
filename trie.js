@@ -9,23 +9,29 @@ var isEmpty = function(ob) {
   return true;
 };
 
-Trie.prototype.set = function(word) {
-  if ( typeof(word) !== 'string' ) {
-    console.log('Word', word, 'could not be added it was not a string');
+Trie.prototype.set = function( word, cb ) {
+  if ( typeof( word ) !== 'string' ) {
+    if ( cb ) {
+      cb (new Error('Argument was not a string'), undefined);
+    }
     return;
   }
-  if (word === '') {
-    if (this.name !== '')
+  if ( word === '' ) {
+    if ( this.name !== '' ) {
       this.isWord = true;
+    }
+    if ( cb ) {
+      cb ( undefined, 1 );
+    }
     return;
   }  
   var child = this.children[word[0]] = this.children[word[0]] || new Trie(word[0]);
-  child.set(word.substr(1));
+  child.set(word.substr(1), cb);
 };
 
 Trie.prototype.del = function(word) {
   if ( typeof(word) !== 'string' ) {
-    console.log('Word', word, 'could not be added it was not a string');
+    console.log('Argument was not a string');
     return;
   }
   if (word === '') {
