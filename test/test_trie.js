@@ -204,6 +204,7 @@ exports['Exists: "Hello"'] = function (test) {
 	});
 };
 
+// ALL ABOUT MATCH
 exports['Match: INPUT ERROR: Empty'] = function (test) {
   root.match();
   test.done();
@@ -227,11 +228,23 @@ exports['Match: INPUT ERROR: Error in Callback'] = function (test) {
 	});
 };
 
-exports['Match'] = function (test) {
+exports['Match: Not a Prefix'] = function (test) {
 	test.expect(1);
 	var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
 	root.sets(words);
-	root.match('a', function( res ) {
+	root.match('f', function( err, res ) {
+		test.ok( err );
+		test.done();	
+	});
+};
+
+exports['Match'] = function (test) {
+	test.expect(2);
+	var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
+	root.sets(words);
+	root.match('a', function( err, res ) {
+	  test.ifError( err );
+	  
 		test.deepEqual( res, words.slice(1) );
 		test.done();	
 	});
