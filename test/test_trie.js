@@ -1,5 +1,27 @@
 var Trie = require('../lib/trie').Trie;
 
+var wrapperInputError = function( name, input ) {
+  exports[ name + ': INPUT ERROR: Empty' ] = function( test ) {
+    root[ name ]();
+    test.done();
+  };
+  exports[ name + ': INPUT ERROR: Not ' + typeof( input ) ] = function( test ) {
+    root[ name ]( 1 );
+    test.done();
+  };
+	exports[ name + ': INPUT ERROR: No callback' ] = function( test ) {
+		root[ name ]( input );
+		test.done();
+	};
+	exports[ name + ': INPUT ERROR: Error in Callback' ] = function( test ) {
+		test.expect(1);
+		root[ name ]( 1, function ( err ) {
+			test.ok( err );
+			test.done();
+		});
+	};
+};
+
 var root = new Trie();
 var expected = {
   root: { name: '' , isWord: false, children: {} },
@@ -14,33 +36,12 @@ exports['Root Creation'] = function (test) {
 };
 
 // ALL THINGS SET
-exports['Set: INPUT ERROR: Empty'] = function (test) {
-  root.set();
-  test.done();
-};
-
-exports['Set: INPUT ERROR: Not String'] = function (test) {
-  root.set( 1 );
-  test.done();
-};
-
-exports['Set: INPUT ERROR: String no Callback'] = function (test) {
-  root.set( "and" );
-  test.done();
-};
-
-exports['Set: INPUT ERROR: Error in Callback'] = function (test) {
-  test.expect(1);
-  root.set( 1, function ( err ) {
-		test.ok( err );
-		test.done();
-	});
-};
+wrapperInputError( 'set', 'and' );
 
 exports['Set: "and"'] = function (test) {
   test.expect(2);
 			
-	root.set( 'and', function ( err ) {
+	root['set']( 'and', function ( err ) {
   	test.ifError( err );
   	
   	expected.root.children['a'] = expected.a;
@@ -54,7 +55,7 @@ exports['Set: "and"'] = function (test) {
 
 exports['Set: "an"'] = function (test) {
   test.expect(2);
-	root.set( 'an', function ( err ) {
+	root['set']( 'an', function ( err ) {
   	test.ifError( err );
     
   	expected.an.isWord = true;
@@ -64,28 +65,7 @@ exports['Set: "an"'] = function (test) {
 };
 
 // ALL THINGS DEL
-exports['Del: INPUT ERROR: Empty'] = function (test) {
-	root.del();
-	test.done();
-};
-
-exports['Del: INPUT ERROR: Not String'] = function (test) {
-	root.del( 1 );
-	test.done();
-};
-
-exports['Del: INPUT ERROR: Sting no Callback'] = function (test) {
-	root.del( "H" );
-	test.done();
-};
-
-exports['Del: INPUT ERROR: Error in Callback'] = function (test) {
-	test.expect(1);
-	root.del( 1, function ( err ) {
-		test.ok(err);
-		test.done();
-	});
-};
+wrapperInputError( 'del', 'and' );
 
 exports['Del: word: "and"'] = function (test) {
 	test.expect(2);
@@ -121,28 +101,7 @@ exports['Empty'] = function( test ) {
 };
 
 // ALL ABOUT SETS
-exports['Sets: INPUT ERROR: Empty'] = function( test ) {
-  root.sets();
-  test.done();
-};
-
-exports['Sets: INPUT ERROR: Not Array'] = function( test ) {
-  root.sets( 1 );
-  test.done();
-};
-
-exports['Sets: INPUT ERROR: Array no Callback'] = function( test ) {
-  root.sets( [ 'an' ] ); 
-  test.done();
-};
-
-exports['Sets: INPUT ERROR: Error in Callback'] = function( test ) {
-  test.expect(1);
-  root.sets( 1, function( err ) {
-    test.ok( err );
-    test.done();
-  });
-};
+wrapperInputError( 'sets', [ 'an' ] );
 
 exports['Sets: words: [ "an" ]'] = function( test ) {
   test.expect(1);
@@ -153,28 +112,7 @@ exports['Sets: words: [ "an" ]'] = function( test ) {
 };
 
 // ALL ABOUT EXISTS
-exports['Exists: INPUT ERROR: Empty'] = function( test ) {
-	root.exists();
-  test.done();
-};
-
-exports['Exists: INPUT ERROR: Not String'] = function( test ) {
-	root.exists( 1 );
-  test.done();
-};
-
-exports['Exists: INPUT ERROR: String no Callback'] = function( test ) {
-	root.exists( 'H' );
-	test.done();
-};
-
-exports['Exists: INPUT ERROR: Error in Callback'] = function( test ) {
-	test.expect(1);
-	root.exists( 1, function( err, res ) {
-	  test.ok( err );
-	  test.done();
-	});
-};
+wrapperInputError( 'exists', 'and' );
 
 //These tests should fail if 'set' and 'sets' were actually async
 exports['Exists: "Hell"'] = function (test) {
@@ -205,28 +143,7 @@ exports['Exists: "Hello"'] = function (test) {
 };
 
 // ALL ABOUT MATCH
-exports['Match: INPUT ERROR: Empty'] = function (test) {
-  root.match();
-  test.done();
-};
-
-exports['Match: INPUT ERROR: Not String'] = function( test ) {
-	root.match( 1 );
-  test.done();
-};
-
-exports['Match: INPUT ERROR: String no Callback'] = function( test ) {
-	root.match( 'H' );
-  test.done();
-};
-
-exports['Match: INPUT ERROR: Error in Callback'] = function (test) {
-  test.expect(1);
-	root.match( 1, function( err, res ) {
-	  test.ok( err );
-	  test.done();
-	});
-};
+wrapperInputError( 'match', [ 'a' ] );
 
 exports['Match: Not a Prefix'] = function (test) {
 	test.expect(1);
