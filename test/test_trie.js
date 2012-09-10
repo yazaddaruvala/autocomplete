@@ -6,7 +6,8 @@ var wrapperInputError = function( name, input ) {
     test.done();
   };
   exports[ name + ': INPUT ERROR: Not ' + typeof( input ) ] = function( test ) {
-    root[ name ]( 1 );
+    if ( typeof( input ) === 'number' ) root[ name ]( ' ' );
+    else root[ name ]( 1 );
     test.done();
   };
 	exports[ name + ': INPUT ERROR: No callback' ] = function( test ) {
@@ -24,10 +25,10 @@ var wrapperInputError = function( name, input ) {
 
 var root = new Trie();
 var expected = {
-  root: { name: '' , isWord: false, children: {} },
-  a   : { name: 'a', isWord: false, children: {} },
-  an  : { name: 'n', isWord: false, children: {} },
-  and : { name: 'd', isWord: false, children: {} }
+  root: { _name: '' , _isWord: false, _children: {}, _count: 0 },
+  a   : { _name: 'a', _isWord: false, _children: {}, _count: 0 },
+  an  : { _name: 'n', _isWord: false, _children: {}, _count: 0 },
+  and : { _name: 'd', _isWord: false, _children: {}, _count: 0 }
 };
 
 exports['Root Creation'] = function (test) {
@@ -44,10 +45,10 @@ exports['Set: "and"'] = function (test) {
 	root['set']( 'and', function ( err ) {
   	test.ifError( err );
   	
-  	expected.root.children['a'] = expected.a;
-  	expected.a.children['n']    = expected.an;
-  	expected.an.children['d']   = expected.and;
-  	expected.and.isWord = true;
+  	expected.root._children['a'] = expected.a;
+  	expected.a._children['n']    = expected.an;
+  	expected.an._children['d']   = expected.and;
+  	expected.and._isWord = true;
   	test.deepEqual( root, expected.root);
 		test.done();
   });
@@ -58,7 +59,7 @@ exports['Set: "an"'] = function (test) {
 	root['set']( 'an', function ( err ) {
   	test.ifError( err );
     
-  	expected.an.isWord = true;
+  	expected.an._isWord = true;
   	test.deepEqual( root, expected.root );
   	test.done();
   });
@@ -73,7 +74,7 @@ exports['Del: word: "and"'] = function (test) {
 	  test.ifError( err );
 	  
 		delete expected.and;
-		delete expected.an.children['d'];
+		delete expected.an._children['d'];
 		test.deepEqual(root, expected.root );
 		test.done();
 	});
@@ -85,7 +86,7 @@ exports['Del: word: "and" again'] = function (test) {
   	test.ifError( err );
 
 		delete expected.and;
-		delete expected.an.children['d'];
+		delete expected.an._children['d'];
 		test.deepEqual(root, expected.root );
 		test.done();
 	});
@@ -139,30 +140,5 @@ exports['Exists: "Hello"'] = function (test) {
 	root.exists('Hello', function( err, res ) {
 	  test.strictEqual( true, res );
 		test.done();
-	});
-};
-
-// ALL ABOUT MATCH
-wrapperInputError( 'match', [ 'a' ] );
-
-exports['Match: Not a Prefix'] = function (test) {
-	test.expect(1);
-	var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
-	root.sets(words);
-	root.match('f', function( err, res ) {
-		test.ok( err );
-		test.done();	
-	});
-};
-
-exports['Match'] = function (test) {
-	test.expect(2);
-	var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
-	root.sets(words);
-	root.match('a', function( err, res ) {
-	  test.ifError( err );
-	  
-		test.deepEqual( res, words.slice(1) );
-		test.done();	
 	});
 };
