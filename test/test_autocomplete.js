@@ -24,14 +24,14 @@ var wrapperInputError = function( name, input ) {
 };
 
 var root = new Autocomplete();
+var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
+root.sets( words );
 
 // ALL ABOUT MATCH
 wrapperInputError( 'match', [ 'a' ] );
 
 exports['Match: Not a Prefix'] = function (test) {
 	test.expect(1);
-	var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
-	root.sets(words);
 	root.match('f', function( err, res ) {
 		test.ok( err );
 		test.done();	
