@@ -25,10 +25,10 @@ var wrapperInputError = function( name, input ) {
 
 var root = new Trie();
 var expected = {
-  root: { _name: '' , _isWord: false, _children: {}, _count: 0 },
-  a   : { _name: 'a', _isWord: false, _children: {}, _count: 0 },
-  an  : { _name: 'n', _isWord: false, _children: {}, _count: 0 },
-  and : { _name: 'd', _isWord: false, _children: {}, _count: 0 }
+  root: { _name: '' , _isWord: false, _children: {} },
+  a   : { _name: 'a', _isWord: false, _children: {} },
+  an  : { _name: 'n', _isWord: false, _children: {} },
+  and : { _name: 'd', _isWord: false, _children: {} }
 };
 
 exports['Root Creation'] = function (test) {
