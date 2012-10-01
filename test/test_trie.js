@@ -14,6 +14,13 @@ var wrapperInputError = function( name, input ) {
 		root[ name ]( input );
 		test.done();
 	};
+	exports[ name + ': INPUT ERROR: No input w/ callback' ] = function( test ) {
+		test.expect(1);
+		root[ name ]( 1, function ( err ) {
+			test.ok( err );
+			test.done();
+		});
+	};
 	exports[ name + ': INPUT ERROR: Error in Callback' ] = function( test ) {
 		test.expect(1);
 		root[ name ]( 1, function ( err ) {
