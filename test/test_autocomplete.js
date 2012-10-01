@@ -49,3 +49,23 @@ exports['Match'] = function (test) {
 		test.done();	
 	});
 };
+
+wrapperInputError( 'score', 'a' );
+
+exports['Score: Word Doesn\'t Exist'] = function (test) {
+	test.expect(1);
+  root.score( 'Sasd', function( err, score ) {
+    test.ok( err );
+    test.done();
+  });
+};
+
+exports['Score: word: and'] = function (test) {
+	test.expect(2);
+  root.score( 'and', function( err, score ) {
+    test.ifError( err );
+    
+    test.equal( 0, score );
+    test.done();
+  });
+};
