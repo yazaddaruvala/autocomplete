@@ -76,3 +76,31 @@ exports['Score: word: and'] = function (test) {
     test.done();
   });
 };
+
+exports['Inc: word: and'] = function (test) {
+	test.expect(3);
+	root.inc( 'and', function( err ) {
+	  test.ifError( err );
+	  
+    root.score( 'and', function( err, score ) {
+      test.ifError( err );
+      
+      test.equal( 1, score );
+      test.done();
+    });
+  });
+};
+
+exports['Dec: word: and'] = function (test) {
+	test.expect(3);
+	root.dec( 'and', function( err ) {
+	  test.ifError( err );
+	  
+    root.score( 'and', function( err, score ) {
+      test.ifError( err );
+      
+      test.equal( 0, score );
+      test.done();
+    });
+  });
+};
