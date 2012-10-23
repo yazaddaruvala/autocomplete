@@ -100,10 +100,26 @@ exports['Del: word: "and" again'] = function (test) {
 };
 
 // ALL ABOUT EMPTY
+exports['isEmpty: Not empty'] = function( test ) {
+  test.expect(1);
+  root.isEmpty( function( err, value ) {
+    test.strictEqual( value, false );
+    test.done();
+  });
+};
+
 exports['Empty'] = function( test ) {
   test.expect(1);
   root.empty( function() {
 		test.deepEqual( root, new Trie() );
+    test.done();
+  });
+};
+
+exports['isEmpty: Empty'] = function( test ) {
+  test.expect(1);
+  root.isEmpty( function( err, value ) {
+    test.strictEqual( value, true );
     test.done();
   });
 };
