@@ -1,35 +1,5 @@
 var Trie = require('../lib/trie').Trie;
 
-var wrapperInputError = function( name, input ) {
-  exports[ name + ': INPUT ERROR: Empty' ] = function( test ) {
-    root[ name ]();
-    test.done();
-  };
-  exports[ name + ': INPUT ERROR: Not ' + typeof( input ) ] = function( test ) {
-    if ( typeof( input ) === 'number' ) root[ name ]( ' ' );
-    else root[ name ]( 1 );
-    test.done();
-  };
-	exports[ name + ': INPUT ERROR: No callback' ] = function( test ) {
-		root[ name ]( input );
-		test.done();
-	};
-	exports[ name + ': INPUT ERROR: No input w/ callback' ] = function( test ) {
-		test.expect(1);
-		root[ name ]( 1, function ( err ) {
-			test.ok( err );
-			test.done();
-		});
-	};
-	exports[ name + ': INPUT ERROR: Error in Callback' ] = function( test ) {
-		test.expect(1);
-		root[ name ]( 1, function ( err ) {
-			test.ok( err );
-			test.done();
-		});
-	};
-};
-
 var root = new Trie();
 var expected = {
   root: { _name: '' , _isWord: false, _children: {} },
@@ -43,15 +13,10 @@ exports['Root Creation'] = function (test) {
   test.done();
 };
 
-// ALL THINGS SET
-wrapperInputError( 'set', 'and' );
-
 exports['Set: "and"'] = function (test) {
   test.expect(2);
-			
 	root['set']( 'and', function ( err ) {
   	test.ifError( err );
-  	
   	expected.root._children['a'] = expected.a;
   	expected.a._children['n']    = expected.an;
   	expected.an._children['d']   = expected.and;
@@ -65,21 +30,16 @@ exports['Set: "an"'] = function (test) {
   test.expect(2);
 	root['set']( 'an', function ( err ) {
   	test.ifError( err );
-    
   	expected.an._isWord = true;
   	test.deepEqual( root, expected.root );
   	test.done();
   });
 };
 
-// ALL THINGS DEL
-wrapperInputError( 'del', 'and' );
-
 exports['Del: word: "and"'] = function (test) {
 	test.expect(2);
 	root.del('and', function (err, res) {
 	  test.ifError( err );
-	  
 		delete expected.and;
 		delete expected.an._children['d'];
 		test.deepEqual(root, expected.root );
@@ -91,7 +51,6 @@ exports['Del: word: "and" again'] = function (test) {
 	test.expect(2);
 	root.del('and', function (err, res) {
   	test.ifError( err );
-
 		delete expected.and;
 		delete expected.an._children['d'];
 		test.deepEqual(root, expected.root );
@@ -99,7 +58,6 @@ exports['Del: word: "and" again'] = function (test) {
 	});
 };
 
-// ALL ABOUT EMPTY
 exports['isEmpty: Not empty'] = function( test ) {
   test.expect(1);
   root.isEmpty( function( err, value ) {
@@ -124,9 +82,6 @@ exports['isEmpty: Empty'] = function( test ) {
   });
 };
 
-// ALL ABOUT SETS
-wrapperInputError( 'sets', [ 'an' ] );
-
 exports['Sets: words: [ "an" ]'] = function( test ) {
   test.expect(1);
   root.sets( [ 'an' ], function() {
@@ -134,9 +89,6 @@ exports['Sets: words: [ "an" ]'] = function( test ) {
     test.done();
   });
 };
-
-// ALL ABOUT EXISTS
-wrapperInputError( 'exists', 'and' );
 
 //These tests should fail if 'set' and 'sets' were actually async
 exports['Exists: "Hell"'] = function (test) {
