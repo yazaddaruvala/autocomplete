@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Autocomplete Webapp Example</title>
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+  </head>
+  <body>
+    <div id="content">
+      <div id="search-box">
+	    <form action="search" method="get">
+		  <input type="text" name="q" value="Search Here" />
+		  <input type="submit" value="Search" />
+		</form>
+      </div>
+    </div>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+      $(function(){
+	    var searchForm = $( 'div#search-box form' );
+	    var searchBox  = $( 'div#search-box input[type=text]' );
+        searchBox.autocomplete({
+          source : '/suggestions.json',
+	      delay: 250,
+	      autoFocus: true,
+		  select : function( event, ui ) {
+			searchBox.val( ui.item.value );
+		    searchForm.submit();
+		  }
+        });
+      });
+    </script>
+  </body>
+</html>
