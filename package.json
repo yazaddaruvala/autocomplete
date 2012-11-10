@@ -1,0 +1,24 @@
+{
+  "name": "autocompletejs",
+  "description": "An asynchronous autocomplete data store built on top of a trie.",
+  "version": "0.2.0",
+  "author": "Yazad Daruvala",
+  "keywords": [
+    "autocomplete",
+    "dictionary",
+    "trie",
+    "data store",
+    "async"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yazaddaruvala/autocompete"
+  },
+  "main": "./lib/autocomplete.js",
+  "engines": {
+    "node": "*"
+  },
+  "devDependencies": {
+    "nodeunit" : "*"
+  }
+}
