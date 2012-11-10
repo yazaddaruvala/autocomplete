@@ -1,5 +1,9 @@
 Autocomplete
 
-Using a trie to achieve some autocomplete functionality.
+Using a Trie to achieve some autocomplete functionality.
+
+The API is asynchronous and uses the Node callback format to return.
+
+Tried to make the API familiar and so I tried to stick close to the Redis API.
 
 License: MIT
