@@ -1,71 +1,84 @@
 var Autocomplete = require('../lib/autocomplete').Autocomplete;
+var assert = require('assert');
 
 var root = new Autocomplete();
 var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
 root.sets( words );
 
-exports['Match: Not a Prefix'] = function (test) {
-	test.expect(1);
-	root.match('f', function( err, res ) {
-		test.ok( err );
-		test.done();	
-	});
-};
-
-exports['Match'] = function (test) {
-	test.expect(2);
-	var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
-	root.sets(words);
-	root.match('a', function( err, res ) {
-	  test.ifError( err );
-	  
-		test.deepEqual( res, words.slice(1) );
-		test.done();	
-	});
-};
-
-exports['Score: Word Doesn\'t Exist'] = function (test) {
-	test.expect(1);
-  root.score( 'Sasd', function( err, score ) {
-    test.ok( err );
-    test.done();
-  });
-};
-
-exports['Score: word: and'] = function (test) {
-	test.expect(2);
-  root.score( 'and', function( err, score ) {
-    test.ifError( err );
-    
-    test.equal( 0, score );
-    test.done();
-  });
-};
-
-exports['Inc: word: and'] = function (test) {
-	test.expect(3);
-	root.inc( 'and', function( err ) {
-	  test.ifError( err );
-	  
-    root.score( 'and', function( err, score ) {
-      test.ifError( err );
-      
-      test.equal( 1, score );
-      test.done();
+describe( 'match', function() {
+  describe( ': Not a Prefix', function() {
+    it( 'should error because this is not a prefix', function( done ) {
+      root.match( 'f', function( err, res ) {
+        assert.ok( err );
+        done();	
+      });
     });
   });
-};
-
-exports['Dec: word: and'] = function (test) {
-	test.expect(3);
-	root.dec( 'and', function( err ) {
-	  test.ifError( err );
-	  
-    root.score( 'and', function( err, score ) {
-      test.ifError( err );
-      
-      test.equal( 0, score );
-      test.done();
+  describe( ': Is a Prefix', function() {
+    it( 'should return the expected array of words', function( done ) {
+      var words = [ 'b', 'a', 'an', 'and', 'andy', 'as', 'art'];
+      root.sets( words );
+      root.match( 'a', function( err, res ) {
+        assert.ifError( err );
+        
+        assert.deepEqual( res, words.slice(1) );
+        done();	
+      });
     });
   });
-};
+});
+
+describe( 'score', function() {
+  describe( ': Word Doesn\'t Exist', function() {
+    it( 'Word should not exist', function( done ) {
+      root.score( 'Sasd', function( err, score ) {
+        assert.ok( err );
+        done();
+      });
+    });
+  });
+  describe( 'Score: "and"', function() {
+    it( 'should return 0', function( done ) {
+      root.score( 'and', function( err, score ) {
+        assert.ifError( err );
+        
+        assert.equal( 0, score );
+        done();
+      });
+    });
+  });
+});
+
+describe( 'inc', function() {
+  describe( ': "and"', function() {
+    it( 'should make score return 1', function( done ) {
+      root.inc( 'and', function( err ) {
+        assert.ifError( err );
+        
+        root.score( 'and', function( err, score ) {
+          assert.ifError( err );
+          
+          assert.equal( 1, score );
+          done();
+        });
+      });
+    });
+  });
+});
+
+describe( 'dec', function() {
+  describe( ': "and"', function() {
+    it( 'should make score return 0 again', function( done ) {
+      root.dec( 'and', function( err ) {
+        assert.ifError( err );
+        
+        root.score( 'and', function( err, score ) {
+          assert.ifError( err );
+          
+          assert.equal( 0, score );
+          done();
+        });
+      });
+    });
+  });
+});
